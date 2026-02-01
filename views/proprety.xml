@@ -1,0 +1,187 @@
+<odoo>
+<!-- property list view  -->
+<record id="view_property_tree" model="ir.ui.view">
+<field name="name">property lit view</field>
+<field name="model">property.property</field>
+<field name="arch" type="xml">
+<tree string="Property list" multi_edit="1" decoration-danger="(is_late)">
+<field name="Name"/>
+<field name="postCode"/>
+<field name="images"/>
+<field name="address"/>
+<field name="description"/>
+<field name="date_avilable"/>
+<field name="expted_sealing_date" />
+<field name="is_late" invisible="True" />
+<field name="sealing_price"/>
+<field name="expted_price"/>
+<field name="bedrom"/>
+<field name="bathroom"/>
+<field name="active" />
+<field name="owner_id"/>
+<field name="type"/>
+<field name="living_area"/>
+<field name="facades"/>
+<field name="garden"/>
+<field name="grach"/>
+<field name="garden_area"/>
+<field name="garden_dir"/>
+<field name="state"/>
+
+
+</tree>
+</field>
+</record>  
+<!-- end of list view -->
+
+<!--  property form view -->
+<record id="view_property_form" model="ir.ui.view">
+<field name="name">property form view</field>
+<field name="model">property.property</field>
+<field name="arch" type="xml">
+<form string="Property form">
+<sheet>
+<widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+
+<header>
+<button string="draft" name="action_draft" type="object" class="btn btn-primary" 
+invisible= "state in ('draft','close')"/>
+<button string="pending" name="action_pending" type="object" class="btn btn-secondert"
+invisible="state != 'draft'"/>
+<button string="Sold" name="action_Sold" type="object" class="btn btn-success"
+invisible ="state != 'pending'"/>
+<field name="state" widget="statusbar" />
+</header>
+<div class="oe_title">
+<lable for="ref"/>
+<h1><field name="ref"/>
+</h1>
+
+</div>
+<group>
+<group string=" basic info">
+<field name="Name" readonly ="state == 'close'" />
+<field name="postCode" readonly="state=='close'"/>
+<field name="images" readonly="state=='close'"/>
+<field name="address" readonly="state=='close'"/>
+<field name="description" readonly="state=='close'"     groups="Real_estate.property_manger_group"
+/>
+<field name="date_avilable" readonly="state=='close'"/>
+<field name="expted_sealing_date" readonly="state=='close'"/>
+
+<field name="sealing_price" readonly="state=='close'"/>
+<field name="expted_price" readonly="state == 'close'"/>
+</group>
+<group string="other information">
+<field name="bedrom" readonly="state == 'close'"/>
+<field name="bathroom" readonly="state =='close'"/>
+ <field name="owner_id" readonly="state =='close'"/> 
+ <field name="phone"  readonly="state == 'close'"/>
+<field name="type"  readonly="state == 'close'"/>
+<field name="living_area"  readonly="state == 'close'"/>
+<field name="facades"  readonly="state == 'close'"/>
+<field name="garden"  readonly="state == 'close'"/>
+<field name="grach"  readonly="state == 'close'"/>
+<field name="garden_area"  readonly="state == 'close'"/>
+<field name="garden_dir"  readonly="state == 'close'"/>
+<field name="active" />
+</group>
+</group>
+<notebook>
+    <page string="bedrom">
+        <field name="line_ids">
+        <tree>
+        <field name="description" />
+        <field name="area"/>
+                </tree>
+
+        </field>
+    </page>
+</notebook>
+</sheet>
+<!--  add chatter to form view -->
+<div class="oe_chatter">
+<field name="message_follower_ids"/>
+<field name="activity_ids"/>
+<field name="message_ids"/>
+</div>
+<!-- end of chatter -->
+
+</form>
+</field>
+</record>
+<!-- search view of property -->
+<record id="search_view_of_property" model="ir.ui.view">
+<field name="name">search view</field>
+<field name="model">property.property</field>
+<field name="arch" type="xml">
+<search string="Search property">
+<field name="Name"/>
+<field name="postCode"/>
+<!--  filter with field garden -->
+<filter name="is_garden" string="with_garden" domain="[('garden','=','True')]"/>
+<!-- filter without garden -->
+<filter name="without_garden" string="without garden" domain="[('garden','!=','True')]"/>
+<!-- group by with garden -->
+<filter name="group_garden" string="garden" context="{'group_by':'garden'}"/>
+<!-- group by with grach -->
+<filter name="group_grash" string="grach" context="{'group_by':'grach'}"/>
+
+
+
+</search>
+</field>
+</record>   
+
+<!--  start of property action -->
+<record id ="property_action"  model="ir.actions.act_window">
+<field name="name">property_action</field>
+<field name="res_model">property.property</field>
+</record>
+<!-- end of property action -->
+
+<!-- server action closed -->
+<record id="property_action_server_closed" model="ir.actions.server">
+ <field name="name"> closed</field>
+ <field name="model_id" ref="model_property_property" />
+ <field name="binding_model_id" ref="model_property_property" />
+ <field name="state" >code</field>
+ <field name="code">actions=records.action_closed()</field>
+</record>    
+
+<record id="change_state_wizard_action_server" model="ir.actions.server">
+    <field name="name">change state</field>
+    <field name="model_id" ref="model_change_state"/>
+    <field name="binding_model_id" ref="model_change_state"/>
+    <field name="state">code</field>
+    <field name="code">actions=record.action_open_change_state_wizard</field>
+</record>
+  
+<!-- end of sever action -->
+<!-- <record id="property_name_action_server" model="ir.actions.server">
+    <field name="name">closed</field>
+    <field name="model_id" ref="model_property_property"/>
+    <field name="binding_model_id" ref="model_property_property"/>
+    <field name="state">code</field>
+    <field name="code">action=records.action_closed</field>
+</record> -->
+<!-- cron action -->
+<record id="check_sealing_cron" model="ir.cron">
+    <field name="name">Property:check_expted_sealing_date</field>
+    <field name="model_id" ref="model_property_property"/>
+    <field name="state">code</field>
+    <field name="code">model.check_expted_sealing_date()</field>
+    <field name="interval_number">1</field>
+    <field name="interval_type">days</field>
+    <field name="numbercall"> -1</field>
+    
+</record>
+<!-- property menu -->
+<menuitem
+id="property_item_menu"
+name="Property"
+parent="property_root_menu"
+action="property_action"
+/>
+<!-- end property menu -->
+</odoo>

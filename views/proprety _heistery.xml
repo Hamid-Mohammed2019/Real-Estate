@@ -1,0 +1,51 @@
+<odoo>
+<record id="proprtyy_heistery_list_view" model="ir.ui.view">
+    <field name="name">property_heistery_view</field>
+    <field name="model">property.heistery</field>
+    <field name="arch" type="xml">
+   
+            <tree string="">
+                <field name="user_id" />
+                <field name="property_id" />
+                <field name="old_state"/>
+                <field name="new_state"/>
+
+            </tree>
+    </field>
+
+</record>
+<record id="property_heistery_view_form" model="ir.ui.view">
+    <field name="name">property_hist_dorm</field>
+    <field name="model">property.heistery</field>
+    <field name="arch" type="xml">
+        <form string="">
+            <sheet>
+                <group>
+                <group name="name" string="string">
+                     <field name="property_id" />
+                <field name="user_id" />
+                </group>
+              
+               <group name="name" string="string">
+                  <field name="old_state"/>
+                <field name="new_state"/>
+               </group>
+                
+               
+                </group>
+            </sheet>
+        </form>
+    </field>
+</record>
+<record id="property_heistery_action" model="ir.actions.act_window">
+<field name="name">property_heistery_action</field>
+<field name="res_model">property.heistery</field>
+</record>
+
+<menuitem
+    id="property_heistery_menu"
+    name=" heistery"
+    parent="property_root_menu"
+    action="property_heistery_action"
+    />
+    </odoo>

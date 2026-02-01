@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<record id="property_report_action_name" model="ir.actions.report">
+    <field name="name">property report</field>
+    <field name="model">property.property</field>
+    <field name="report_type">qweb-pdf</field>
+    <field name="report_name">Real_estate.property_report_template</field>
+    <field name="binding_model_id" ref="model_property_property"/>
+    <field name="binding_type">report</field>
+</record>
+<template id="property_report_template" name="property_template">
+    <t t-call="web.html_container">
+    <t t-call="web.external_layout">
+    <t t-foreach="docs" t-as="o">
+        <h1> property  report</h1>
+    </t>
+    </t>
+    </t>
+</template>
+</odoo>
